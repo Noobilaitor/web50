@@ -1,0 +1,20 @@
+{% extends 'auctions/layout.html'%}
+{% block body %}
+<h1>Category: {{cat_name}}</h1>
+{% for cat in category %}
+<div style="display:flex">
+{% if cat.is_active %}
+{% if cat.url %}
+        <div><img src="{{cat.url}}" alt="watching_image" style="max-width: 200px; max-height: 200px;"></div>
+    {% endif %}
+        <div><ul style="list-style-type: none;">
+            <li style="font-size: 30px"><a href="{% url 'listing' cat.id %}">{{cat.name}}</a></li>
+            <li><div style="display:flex; flex-direction: column; min-height:100px; justify-content: center;">{{cat.description}}</div></li>
+            <li>Current Bid: {{cat.price}}$</li>
+            <li>Posted on: {{cat.date_created}}</li>
+        </ul>
+        </div> 
+</div> 
+{% endif %}
+{% endfor %}
+{% endblock %}

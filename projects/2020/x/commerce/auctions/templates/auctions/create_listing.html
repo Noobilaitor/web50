@@ -1,0 +1,67 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>{% block title %}Create Listing{% endblock %}</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <link href="{% static 'auctions/styles.css' %}" rel="stylesheet">
+    </head>
+    <body>
+        <h1>Auctions</h1>
+        <div>
+            {% if user.is_authenticated %}
+                Signed in as <strong>{{ user.username }}</strong>.
+            {% else %}
+                Not signed in.
+            {% endif %}
+        </div>
+        <ul class="nav">
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'index' %}">Active Listings</a>
+            </li>
+            {% if user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
+                </li>
+            {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'login' %}">Log In</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'register' %}">Register</a>
+                </li>
+            {% endif %}
+        </ul>
+        <hr>
+        {% block body %}
+            {% if user.is_authenticated %}
+                <form action="{% url 'create_listing' %}" method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <input class="form-control" autofocus type="text" name="name" placeholder="Name">
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" type="number" name="price" placeholder="Price">
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" type="text" name="description" placeholder="Description">
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" type="url" name="url" placeholder="Image url">
+                    </div>
+                    <div class="form-group">
+                        <select name="cat" >
+                            {% for cat in category %}
+                                <option>{{cat}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                        <input class="btn btn-primary" type="submit" value="Create a new Listing">
+                </form>
+            {% else %}
+                <h4>{{message}}</h4>
+            {% endif %}
+        {% endblock %}
+    </body>
+</html>

@@ -1,0 +1,18 @@
+{% extends 'auctions/layout.html' %}
+{% block body %}
+<h2>Watchlist</h2>
+{% for watching in watchlist %}
+<div style="display:flex">
+    {% if watching.url %}
+        <div><img src="{{watching.url}}" alt="watching_image" style="max-width: 200px; max-height: 200px;"></div>
+    {% endif %}
+        <div><ul style="list-style-type: none;">
+            <li style="font-size: 30px"><a href="{% url 'listing' watching.id %}">{{watching.name}}</a></li>
+            <li><div style="display:flex; flex-direction: column; min-height:100px; justify-content: center;">{{watching.description}}</div></li>
+            <li>Current Bid: {{watching.price}}$</li>
+            <li>Posted on: {{watching.date_created}}</li>
+        </ul>
+        </div> 
+</div> 
+{% endfor %}
+{% endblock %}

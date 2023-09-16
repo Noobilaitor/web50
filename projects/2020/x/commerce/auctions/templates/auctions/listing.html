@@ -1,0 +1,66 @@
+{% extends 'auctions/layout.html' %}
+
+{% block body %}
+<h2>{{listing.name}}</h2>
+<img src="{{listing.url}}" alt="listing_image" style="max-width: 1000px; max-height: 500px;">
+<h5>{{listing.description}}</h5>
+<div><form action="{% url 'add_watchlist' listing.id %}" method="post"> {% csrf_token %}
+    <h4>Current Bid is {{listing.price}}$</h4>
+    {% if user.is_authenticated and user in listing.watchlist.all %}
+    <input type="submit" value="Remove from watchlist"></div>
+    {% elif not user.is_authenticated %}  
+    </div>
+    {% else %}
+    <input type="submit" value="Add to watchlist"></div>
+    {% endif %}
+</form>
+{% if listing.bids.bid_number %}
+<h4>{{listing.bids.bid_number}} bids so far.</h4>
+
+{% else %}
+<h4>0 bids so far.</h4>
+{% endif %}
+{% if listing.is_active and listing.creator != user.username %}
+<form action="{% url 'place_bid' listing.id %}" method="post">
+    {% csrf_token %}
+    <input type="number" placeholder="Bid" name="placed_bid">
+    <input type="submit" value="Place Bid">
+</form>
+{% elif listing.creator == user.username and listing.is_active %}
+{% else %}
+{% if listing.bids.highest_bidder %}
+<h3>The bid has closed. {{listing.bids.highest_bidder}} is the winner of the auction</h3>
+{% else %}
+<h3>The bid has closed. No one has won the auction</h3>
+{% endif %}
+{% endif %}
+{% if message %}
+<h5>{{message}}</h5>
+{% endif %}
+<h4>Details</h4>
+<ul>
+    <li>Posted by {{listing.creator}}</li>
+    <li>Category:<a href="{% url 'category' listing.category %}">{{listing.category}}</a></li>
+    <li>Created on: {{listing.date_created}}</li>
+</ul>
+{% if user.username == listing.creator and listing.is_active %}
+<form action="{% url 'remove_list' listing.id %}" method="post"> {% csrf_token %}
+    <input type="submit" value="Close Auction">
+</form>
+{% endif %}
+{% if user.is_authenticated %}
+    <form action="{% url 'add_comment' listing.id %}" method="post"> {% csrf_token %}
+        <input type="text" name="comment_value">
+        <input type="submit" value="Post comment">
+    </form>
+{% endif %}
+{% if listing.comment %}
+{% for comment in listing.comment.all %}
+<div><h3>{{comment.commentor}}</h3>
+<h5>{{comment.comment}}</h5></div>
+{% endfor %}
+{% endif %}
+{% if com %}
+<h6>{{com}}</h6>
+{% endif %}
+{% endblock %}
