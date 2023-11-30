@@ -1,0 +1,29 @@
+#create_post {
+    width: 9rem;
+    font-size: large;
+    left: 77rem;
+    bottom: 1rem;
+    position: fixed;
+}
+
+#create_post_btn{
+    background-color: grey;
+    color: blue;
+}
+
+#post_creation_h1{
+    position: relative;
+    left: 2rem;
+}
+
+#create_post_text{
+    position: relative;
+    top: 2.5rem;
+    left: 2rem;
+}
+
+#post_post{
+    position: relative;
+    bottom: -5rem;
+    left: -25rem;
+}
