@@ -1,6 +1,18 @@
 {% extends "network/layout.html" %}
 
 {% block body %}
-    TODO
+        {% if posts %}
+        {% for post in posts %}
+        <div id="post_content">
+            <div id="creator_post">
+                <h4 id="creator">{{ post.creator }}</h4>
+                <h5 id="date">{{ post.date_created }}</h5></div>
+            <h6>{{ post.contents }}</h6>
+            <h6 id="likes_num">{{post.likes_num}} likes</h6>
+        </div>
+        {% endfor %}
+        {% else %}
+        <h1>No posts</h1>
+        {% endif %}
     <div id="create_post"><button id="create_post_btn"><a id="create_post_btn" href="{% url 'create_post' %}">Create Post</a></button></div>
 {% endblock %}

@@ -14,11 +14,15 @@ def index(request):
             user = request.user
             post = Posts.objects.create(creator=user, contents=contents)
             post.save()
-            return render(request, "network/index.html")
+            return render(request, "network/index.html", {
+                "posts": Posts.objects.all()
+            })
         else:
             return render(request, "network/login.html")
     else:
-        return render(request, "network/index.html")
+        return render(request, "network/index.html", {
+                "posts": Posts.objects.all()
+            })
 
 
 def login_view(request):

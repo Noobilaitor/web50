@@ -1,3 +1,7 @@
+#navbar{
+    box-shadow: 0 4px 6px 0 rgba(0, 0, 0, 0.2);
+}
+
 #create_post {
     width: 9rem;
     font-size: large;
@@ -26,4 +30,37 @@
     position: relative;
     bottom: -5rem;
     left: -25rem;
+}
+
+#post_content{
+    margin: 2rem;
+    border: 0.3rem solid;
+    border-radius: 1rem;
+    border-color: grey;
+    max-width: fit-content;
+    white-space: normal;
+    word-wrap: break-word;
+}
+
+#creator_post {
+    display: flex;
+    margin-left: 0.1rem;
+}
+
+#date {
+    display: flex;
+    flex-direction: column-reverse;
+    font-size: 0.8rem;
+    margin-left: 0.5rem;
+    margin-right: 0.2rem;
+}
+h6 {
+    margin-left: 0.1rem;
+    margin-right: 0.2rem;
+}
+#likes_num{
+    color: #c70e0e;
+}
+#creator{
+    color: #2f2ffb;
 }
