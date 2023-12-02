@@ -32,6 +32,11 @@
     left: -25rem;
 }
 
+#all_posts {
+    display: flex;
+    justify-content: center;
+}
+
 #post_content{
     margin: 2rem;
     border: 0.3rem solid;
