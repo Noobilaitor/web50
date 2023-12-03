@@ -1,0 +1,29 @@
+{% extends "network/layout.html" %}
+
+{% block body %}
+<h1 id="all_posts">{{cur_profile}}</h1>
+<div id="all_posts"><h5 id="follow">Followers {{follow_num}}</h5>
+    <h5 id="follow">Following {{following_num}}</h5></div>
+    {% if message %}
+    <h5>{{message}}</h5>{% endif %}
+    {% if btn %}
+    <a href="{% url 'follow' cur_profile %}"><button>follow</button></a>
+    {% else %}
+    <a href="{% url 'unfollow' cur_profile %}"><button>unfollow</button></a>
+    {% endif %}
+{% if user_posts %}
+<div id="parent">
+{% for post in user_posts %}
+<div id="post_content">
+    <div id="creator_post">
+        <h4 id="creator">{{ post.creator }}</h4>
+        <h5 id="date">{{ post.date_created }}</h5></div>
+    <h6>{{ post.contents }}</h6>
+    <h6 id="likes_num">{{post.likes_num}} likes</h6>
+</div>
+{% endfor %}
+</div>
+{% else %}
+<h2>No Posts</h2>
+{% endif %}
+{% endblock %}
