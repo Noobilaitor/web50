@@ -163,3 +163,22 @@ def unfollow(request, profile):
         })
     else:
         return HttpResponseRedirect(reverse("register"))
+
+def following(request):
+    user = request.user
+    if user.is_authenticated:
+        user_following = Followers.objects.filter(followers=user).all()
+        all_followers = []
+        for followerr in user_following:
+            followerr = User.objects.get(username=followerr.following)
+            all_followers.append(followerr)
+        follow_posts = []
+        for follower in all_followers:
+            follow_post = Posts.objects.filter(creator=follower).all()
+            for post in follow_post:
+                follow_posts.append(post)
+        return render(request, "network/following.html", {
+            "posts": follow_post,
+        })
+    else:
+        return HttpResponseRedirect(reverse("register"))

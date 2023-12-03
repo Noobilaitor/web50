@@ -5,7 +5,7 @@
 #create_post {
     width: 9rem;
     font-size: large;
-    left: 77rem;
+    right: 1rem;
     bottom: 1rem;
     position: fixed;
 }
