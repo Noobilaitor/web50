@@ -7,7 +7,6 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from .models import *
 
-
 def index(request):
     if request.method == "POST":
         if request.user.is_authenticated:
