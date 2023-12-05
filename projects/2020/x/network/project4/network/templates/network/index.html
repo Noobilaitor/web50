@@ -1,9 +1,11 @@
 {% extends "network/layout.html" %}
 
 {% block body %}
+{% block profile %}
+{% endblock profile %}
         {% if posts %}
-        <h1 id="all_posts">All Posts</h1>
-        {% for post in posts %}
+        <h1 id="all_posts">{{title}}</h1>
+        {% for post in page_obj %}
         <div id="post_content">
             <div id="creator_post">
                 <h4 id="creator"><a href="{% url "profile" post.creator %}">{{ post.creator }}</a></h4>
@@ -12,6 +14,23 @@
             <h6 id="likes_num">{{post.likes_num}} likes</h6>
         </div>
         {% endfor %}
+        <div class="pagination">
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1">&laquo; first</a>
+                    <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                {% endif %}
+        
+                <span class="current">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                </span>
+        
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">next</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
         {% else %}
         <h1>No posts</h1>
         {% endif %}

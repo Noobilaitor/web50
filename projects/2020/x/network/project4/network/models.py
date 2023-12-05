@@ -10,6 +10,7 @@ class Posts(models.Model):
     contents = models.CharField(max_length=300)
     date_created = models.DateTimeField(auto_now_add=True)
     likes_num = models.IntegerField(default=0)
+    
 
 class Followers(models.Model):
     following = models.ForeignKey(User, on_delete=models.CASCADE, related_name="following")

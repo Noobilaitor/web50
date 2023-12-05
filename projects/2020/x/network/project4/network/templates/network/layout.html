@@ -44,6 +44,8 @@
         <div class="body">
             {% block body %}
             {% endblock %}
+            {% if posts or user_posts %}
+            {% endif %}
         </div>
     </body>
 </html>

@@ -69,11 +69,15 @@ h6 {
 #creator{
     color: #2f2ffb;
 }
-#parent{
+/*#parent{
     display: flex;
     flex-direction: column-reverse;
-}
+}*/
 
 #follow{
     margin-left: 1rem;
+}
+.pagination{
+    display: flex;
+    justify-content: center;
 }
