@@ -45,8 +45,6 @@ function archive(is_archived, email_id) {
       load_mailbox('inbox');
     })
   }
-  
-  
 }
 
 function reply(sender, subject, body, timestamp){

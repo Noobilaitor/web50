@@ -81,3 +81,7 @@ h6 {
     display: flex;
     justify-content: center;
 }
+
+#edit_btn{
+    max-height: 10rem;
+}

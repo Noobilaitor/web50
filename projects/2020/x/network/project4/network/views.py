@@ -5,7 +5,8 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.paginator import Paginator
-
+import json
+from django.http import JsonResponse
 from .models import *
 
 def index(request):
@@ -228,3 +229,23 @@ def following(request):
             })
     else:
         return HttpResponseRedirect(reverse("register"))
+
+def edit(request, post_id):
+    posts = Posts.objects.all().order_by('id')
+    paginator = Paginator(posts, 5)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+    post = Posts.objects.get(pk=post_id)
+    creator = post.creator
+    if request.user == creator:
+        if request.method == 'POST':
+            data = json.loads(request.body)
+            post.contents = data["content"]
+            post.save()
+            return JsonResponse({"data": data["content"]})
+    else:
+        return render(request, "network/index.html", {
+            "posts": posts,
+            "page_obj": page_obj,
+            "title": 'All Posts',
+        })

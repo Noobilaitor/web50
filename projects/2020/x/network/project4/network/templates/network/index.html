@@ -1,4 +1,5 @@
 {% extends "network/layout.html" %}
+{% load static %}
 
 {% block body %}
 {% block profile %}
@@ -10,8 +11,12 @@
             <div id="creator_post">
                 <h4 id="creator"><a href="{% url "profile" post.creator %}">{{ post.creator }}</a></h4>
                 <h5 id="date">{{ post.date_created }}</h5></div>
-            <h6>{{ post.contents }}</h6>
+            <div id="div{{post.id}}"><h6 id="post{{post.id}}">{{ post.contents }}</h6><textarea class="text" name="contents" id="text{{post.id}}"></textarea></div>
+            <div id="creator_post">
             <h6 id="likes_num">{{post.likes_num}} likes</h6>
+            <div id="btn{{post.id}}"><button class="edit_btn" id="edit_btn{{post.id}}" data-id={{post.id}}>Edit</button>
+                <button class="save_btn" id="save_btn{{post.id}}" data-id={{post.id}} >Save</button></div>
+            </div>
         </div>
         {% endfor %}
         <div class="pagination">
@@ -36,3 +41,7 @@
         {% endif %}
     <div id="create_post"><button id="create_post_btn"><a id="create_post_btn" href="{% url 'create_post' %}">Create Post</a></button></div>
 {% endblock %}
+
+{% block script %}
+<script src="{% static 'network/inbox.js' %}"></script>
+{% endblock script %}
