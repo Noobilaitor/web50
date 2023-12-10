@@ -6,9 +6,12 @@
     <h5 id="follow">Following {{following_num}}</h5></div>
     {% if message %}
     <h5>{{message}}</h5>{% endif %}
+    {% if user == cur_profile %}
+    {% else %}
     {% if btn %}
     <a href="{% url 'follow' cur_profile %}"><button>follow</button></a>
     {% else %}
     <a href="{% url 'unfollow' cur_profile %}"><button>unfollow</button></a>
+    {% endif %}
     {% endif %}
 {% endblock%}

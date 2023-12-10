@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
@@ -10,10 +11,18 @@ from django.http import JsonResponse
 from .models import *
 
 def index(request):
-    posts = Posts.objects.all().order_by('id')
-    paginator = Paginator(posts, 5)
+    posts = Posts.objects.all().order_by('-id')
+    paginator = Paginator(posts, 10)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
+    likes = Likes.objects.all()
+    liked_posts = []
+    try:
+        for like in likes:
+            if like.user.id == request.user.id:
+                liked_posts.append(like.post.id)
+    except:
+        liked_posts = []
     if request.method == "POST":
         if request.user.is_authenticated:
             contents = request.POST["contents"]
@@ -24,6 +33,7 @@ def index(request):
                 "posts": posts,
                 "page_obj": page_obj,
                 "title": 'All Posts',
+                "liked_posts": liked_posts,
             })
         else:
             return render(request, "network/login.html")
@@ -32,7 +42,8 @@ def index(request):
                 "posts": posts,
                 "page_obj": page_obj,
                 "title": 'All Posts',
-            })
+                "liked_posts": liked_posts,
+                })
 
 def login_view(request):
     if request.method == "POST":
@@ -55,7 +66,7 @@ def login_view(request):
 
 def logout_view(request):
     logout(request)
-    return HttpResponseRedirect(reverse("index"))
+    return HttpResponseRedirect(reverse("login"))
 
 def register(request):
     if request.method == "POST":
@@ -86,7 +97,16 @@ def register(request):
 def create_post(request):
     return render(request, "network/create_post.html")
 
+@login_required
 def follow(request, profile):
+    likes = Likes.objects.all()
+    liked_posts = []
+    try:
+        for like in likes:
+            if like.user.id == request.user.id:
+                liked_posts.append(like.post.id)
+    except:
+        liked_posts = []
     if request.user.is_authenticated:
         cur_profile = User.objects.get(username=profile)
         try:
@@ -97,7 +117,8 @@ def follow(request, profile):
             user_posts = Posts.objects.filter(creator=cur_profile.id).all().order_by('-id')
             follow_num = cur_profile.following.all()
             following_num = cur_profile.followers.all()
-            paginator = Paginator(user_posts, 5)
+            paginator = Paginator(user_posts, 10
+    )
             page_number = request.GET.get("page")
             page_obj = paginator.get_page(page_number)
             return render(request, "network/profile.html", {
@@ -108,12 +129,14 @@ def follow(request, profile):
                 "following_num": following_num.count(),
                 "page_obj": page_obj,
                 "title": f"{cur_profile.username}'s Posts",
+                "liked_posts": liked_posts,
                 "message": 'You already follow this user'
             })
         user_posts = Posts.objects.filter(creator=cur_profile.id).all().order_by('-id')
         follow_num = cur_profile.following.all()
         following_num = cur_profile.followers.all()
-        paginator = Paginator(user_posts, 5)
+        paginator = Paginator(user_posts, 10
+)
         page_number = request.GET.get("page")
         page_obj = paginator.get_page(page_number)
         return render(request, "network/profile.html", {
@@ -123,17 +146,26 @@ def follow(request, profile):
             "follow_num": follow_num.count(),
             "page_obj": page_obj,
             "title": f"{cur_profile.username}'s Posts",
+            "liked_posts": liked_posts,
             "following_num": following_num.count(),
         })
     else:
         return HttpResponseRedirect(reverse("register"))
 
 def profile(request, profile):
+    likes = Likes.objects.all()
+    liked_posts = []
+    try:
+        for like in likes:
+            if like.user.id == request.user.id:
+                liked_posts.append(like.post.id)
+    except:
+        liked_posts = []
     cur_profile = User.objects.get(username=profile)
     user_posts = Posts.objects.filter(creator=cur_profile.id).all().order_by('-id')
     follow_num = cur_profile.following.all().order_by('id')
     following_num = cur_profile.followers.all().order_by('id')
-    paginator = Paginator(user_posts, 5)
+    paginator = Paginator(user_posts, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     try:
@@ -147,6 +179,7 @@ def profile(request, profile):
         "following_num": following_num.count(),
         "btn": "follow",
         "title": f"{cur_profile.username}'s Posts",
+        "liked_posts": liked_posts,
         "page_obj": page_obj
     })
     return render(request, "network/profile.html", {
@@ -156,10 +189,20 @@ def profile(request, profile):
         "follow_num": follow_num.count(),
         "following_num": following_num.count(),
         "title": f"{cur_profile.username}'s Posts",
+        "liked_posts": liked_posts,
         "page_obj": page_obj
     })
 
+@login_required
 def unfollow(request, profile):
+    likes = Likes.objects.all()
+    liked_posts = []
+    try:
+        for like in likes:
+            if like.user.id == request.user.id:
+                liked_posts.append(like.post.id)
+    except:
+        liked_posts = []
     if request.user.is_authenticated:
         cur_profile = User.objects.get(username=profile)
         try:
@@ -169,7 +212,8 @@ def unfollow(request, profile):
             user_posts = Posts.objects.filter(creator=cur_profile.id).all().order_by('-id')
             follow_num = cur_profile.following.all()
             following_num = cur_profile.followers.all()
-            paginator = Paginator(user_posts, 5)
+            paginator = Paginator(user_posts, 10
+    )
             page_number = request.GET.get("page")
             page_obj = paginator.get_page(page_number)
             return render(request, "network/profile.html", {
@@ -180,12 +224,14 @@ def unfollow(request, profile):
                 "following_num": following_num.count(),
                 "message": 'You do not follow this user',
                 "title": f"{cur_profile.username}'s Posts",
+                "liked_posts": liked_posts,
                 "page_obj": page_obj
             })
         user_posts = Posts.objects.filter(creator=cur_profile.id).all().order_by('-id')
         follow_num = cur_profile.following.all()
         following_num = cur_profile.followers.all()
-        paginator = Paginator(user_posts, 5)
+        paginator = Paginator(user_posts, 10
+)
         page_number = request.GET.get("page")
         page_obj = paginator.get_page(page_number)
         return render(request, "network/profile.html", {
@@ -196,12 +242,22 @@ def unfollow(request, profile):
             "following_num": following_num.count(),
             "btn": "follow",
             "title": f"{cur_profile.username}'s Posts",
+            "liked_posts": liked_posts,
             "page_obj": page_obj
         })
     else:
         return HttpResponseRedirect(reverse("register"))
 
+@login_required
 def following(request):
+    likes = Likes.objects.all()
+    liked_posts = []
+    try:
+        for like in likes:
+            if like.user.id == request.user.id:
+                liked_posts.append(like.post.id)
+    except:
+        liked_posts = []
     user = request.user
     if user.is_authenticated:
         user_following = Followers.objects.filter(followers=user).all()
@@ -215,26 +271,26 @@ def following(request):
             follow_post = Posts.objects.filter(creator=follower).all()
             for post in follow_post:
                 follow_posts.append(post)
+                print(follow_post)
         if follow_posts == []:
             return render(request, "network/following.html", )
         else:  
-            follow_post.order_by('id')
-            paginator = Paginator(follow_post, 5)
+            follow_posts.reverse()
+            paginator = Paginator(follow_posts, 10
+    )
             page_number = request.GET.get("page")
             page_obj = paginator.get_page(page_number)
             return render(request, "network/following.html", {
-                "title": 'All Posts',
+                "title": 'Following',
                 "posts": follow_post,
                 "page_obj": page_obj,
+                "liked_posts": liked_posts
             })
     else:
         return HttpResponseRedirect(reverse("register"))
 
+@login_required
 def edit(request, post_id):
-    posts = Posts.objects.all().order_by('id')
-    paginator = Paginator(posts, 5)
-    page_number = request.GET.get("page")
-    page_obj = paginator.get_page(page_number)
     post = Posts.objects.get(pk=post_id)
     creator = post.creator
     if request.user == creator:
@@ -244,8 +300,20 @@ def edit(request, post_id):
             post.save()
             return JsonResponse({"data": data["content"]})
     else:
-        return render(request, "network/index.html", {
-            "posts": posts,
-            "page_obj": page_obj,
-            "title": 'All Posts',
-        })
+        return HttpResponseRedirect(reverse(index))
+
+@login_required
+def like(request, post_id):
+    user = request.user
+    user = User.objects.get(pk=user.id)
+    post = Posts.objects.get(pk=post_id)
+    try:
+        like = Likes.objects.get(user=user,post=post)
+    except:
+        add_like = Likes(user=user,post=post)
+        add_like.save()
+        like_num = post.liked_post.count()
+        return JsonResponse({"message": "liked", "like_num": like_num})
+    like.delete()
+    like_num = post.liked_post.count()
+    return JsonResponse({"message": "Unliked", "like_num": like_num})

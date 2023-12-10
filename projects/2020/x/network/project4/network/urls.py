@@ -13,7 +13,11 @@ urlpatterns = [
     path("users/<str:profile>/follow", views.follow, name="follow"),
     path("users/<str:profile>/unfollow", views.unfollow, name="unfollow"),
     path("following", views.following, name="following"),
+    path("accounts/login/", views.login_view, name="login"),
     
     #API routes
     path("edit/<int:post_id>", views.edit, name="edit"),
+    path("users/edit/<int:post_id>", views.edit, name="edit"),
+    path("like/<int:post_id>", views.like, name="like"),
+    path("users/like/<int:post_id>", views.like, name="like"),
 ]

@@ -4,6 +4,20 @@
 {% block body %}
 {% block profile %}
 {% endblock profile %}
+<script>function like(post_id){
+    fetch(`like/${post_id.dataset.id}`)
+    .then(response =>response.json())
+    .then(result =>{
+        like_btn = document.getElementById(`likes${post_id.dataset.id}`)
+        image = document.getElementById(`image${post_id.dataset.id}`)
+        if (result.message == "liked"){
+            image.src = "{% static 'like.png' %}"
+        } else{
+            image.src = "{% static 'unlike.png' %}"
+        }
+        like_btn.textContent = `${result.like_num}`
+        })
+    }</script>
         {% if posts %}
         <h1 id="all_posts">{{title}}</h1>
         {% for post in page_obj %}
@@ -13,8 +27,13 @@
                 <h5 id="date">{{ post.date_created }}</h5></div>
             <div id="div{{post.id}}"><h6 id="post{{post.id}}">{{ post.contents }}</h6><textarea class="text" name="contents" id="text{{post.id}}"></textarea></div>
             <div id="creator_post">
-            <h6 id="likes_num">{{post.likes_num}} likes</h6>
-            <div id="btn{{post.id}}"><button class="edit_btn" id="edit_btn{{post.id}}" data-id={{post.id}}>Edit</button>
+            {% if post.id in liked_posts %}
+            <img data-id={{post.id}} id="image{{post.id}}" class="image" src={% static "like.png" %} alt="liked">
+            <h6 data-id={{post.id}} class="likes_num" id="likes{{post.id}}">{{ post.liked_post.count }}</h6>
+            {% else %}
+            <img data-id={{post.id}} id="image{{post.id}}" class="image" src={% static "unlike.png" %} alt="unlike">
+            <h6 data-id={{post.id}} class="likes_num" id="likes{{post.id}}">{{post.liked_post.count}}</h6>{% endif %}
+            {% if user == post.creator %}<div id="btn{{post.id}}"><button class="edit_btn" id="edit_btn{{post.id}}" data-id={{post.id}}>Edit</button>{% endif %}
                 <button class="save_btn" id="save_btn{{post.id}}" data-id={{post.id}} >Save</button></div>
             </div>
         </div>

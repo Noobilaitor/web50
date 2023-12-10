@@ -13,6 +13,18 @@ document.addEventListener('DOMContentLoaded', function() {
     Array.prototype.forEach.call(save_btns, function(save_btn) {
         save_btn.style.display = "none"
     })
+    /*likes_btn = document.getElementsByClassName('likes_num')
+    Array.prototype.forEach.call(likes_btn, function(like_btn) {
+        like_btn.addEventListener('click', function(){
+            like(like_btn)
+        })
+    })*/
+    images = document.getElementsByClassName('image')
+    Array.prototype.forEach.call(images, function(image) {
+        image.addEventListener('click', function(){
+            like(image)
+        })
+    })
 })
 
 function getCookie(name){
@@ -20,6 +32,21 @@ function getCookie(name){
     const parts = value.split(`; ${name}=`);
     if(parts.length == 2) return parts.pop().split(';').shift();
 }
+
+/*function like(post_id){
+    fetch(`like/${post_id.dataset.id}`)
+    .then(response =>response.json())
+    .then(result =>{
+        like_btn = document.getElementById(`likes${post_id.dataset.id}`)
+        image = document.getElementById(`image${post_id.dataset.id}`)
+        if (result.message == "liked"){
+            image.src = "{% static 'like.png' %}"
+        } else{
+            image.src = "{% static 'unlike.png' %}"
+        }
+        like_btn.textContent = `${result.like_num}`
+    })
+}*/
 
 function save(post_id){
     const content = document.getElementById(`text${post_id.dataset.id}`).value
