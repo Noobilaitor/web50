@@ -11,9 +11,9 @@
         like_btn = document.getElementById(`likes${post_id.dataset.id}`)
         image = document.getElementById(`image${post_id.dataset.id}`)
         if (result.message == "liked"){
-            image.src = "{% static 'like.png' %}"
+            image.src = "{% static 'network/like.png' %}"
         } else{
-            image.src = "{% static 'unlike.png' %}"
+            image.src = "{% static 'network/unlike.png' %}"
         }
         like_btn.textContent = `${result.like_num}`
         })
@@ -28,10 +28,10 @@
             <div id="div{{post.id}}"><h6 id="post{{post.id}}">{{ post.contents }}</h6><textarea class="text" name="contents" id="text{{post.id}}"></textarea></div>
             <div id="creator_post">
             {% if post.id in liked_posts %}
-            <img data-id={{post.id}} id="image{{post.id}}" class="image" src={% static "like.png" %} alt="liked">
+            <img data-id={{post.id}} id="image{{post.id}}" class="image" src={% static "network/like.png" %} alt="liked">
             <h6 data-id={{post.id}} class="likes_num" id="likes{{post.id}}">{{ post.liked_post.count }}</h6>
             {% else %}
-            <img data-id={{post.id}} id="image{{post.id}}" class="image" src={% static "unlike.png" %} alt="unlike">
+            <img data-id={{post.id}} id="image{{post.id}}" class="image" src={% static "network/unlike.png" %} alt="unlike">
             <h6 data-id={{post.id}} class="likes_num" id="likes{{post.id}}">{{post.liked_post.count}}</h6>{% endif %}
             {% if user == post.creator %}<div id="btn{{post.id}}"><button class="edit_btn" id="edit_btn{{post.id}}" data-id={{post.id}}>Edit</button>{% endif %}
                 <button class="save_btn" id="save_btn{{post.id}}" data-id={{post.id}} >Save</button></div>
