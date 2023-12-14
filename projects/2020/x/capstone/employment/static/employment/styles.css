@@ -1,0 +1,66 @@
+body, html{
+    margin: 0;
+    padding: 0;
+    border: 0;
+    width: 100%;
+    background-color: #5cb6fd;
+}
+
+#navbar{
+    box-shadow: 0 4px 10px #0180e0;
+    height: 15vh;
+    background-color: white;
+    display: flex;
+}
+
+#title{
+    margin: 0;
+    margin-left: 0.5rem;
+    margin-right: 2rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    flex-direction: column;
+}
+
+.nav_items{
+    display: flex;
+    align-items: flex-end;
+    margin: 0;
+    margin-bottom: 0.5rem;
+    margin-left: 0.7rem;
+    margin-right: 0.3rem;
+}
+
+#log_in{
+    margin-left: 35rem;
+}
+
+#profile_pic{
+    width:2rem;
+    height:2rem;
+}
+
+a{
+    text-decoration: none;
+}
+
+.form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#image_up{
+    width: 11rem;
+}
+
+.form-control{
+    border: 0;
+    border-bottom: 2px solid #9b9b9b;
+    outline: 0;
+    padding: 7px 0;
+    margin-bottom: 0.2rem;
+    background: transparent;
+}
