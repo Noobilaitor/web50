@@ -17,7 +17,11 @@
         <h3 class="nav_items"><a href="">Search for a CV</a></h3>
         {% else %}
         <h3 class="nav_items"><a href="">Find a Job</a></h3>
-        <h3 class="nav_items"><a href="{% url "create_CV" %}">Create Your CV</a></h3>
+            {% if user.has_CV %}
+            <h3 class="nav_items"><a href="{% url "edit_CV" %}">Edit Your CV</a></h3>
+            {% else %}
+            <h3 class="nav_items"><a href="{% url "create_CV" %}">Create Your CV</a></h3>
+            {% endif %}
         {% endif %}
         <div id="log_in">
             {% if user.employer or user.employee %}

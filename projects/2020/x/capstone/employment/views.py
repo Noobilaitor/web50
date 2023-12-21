@@ -104,12 +104,15 @@ def emp_register(request):
 def create_CV(request):
     if request.method == "POST":
         if request.user.employee: 
+            user = request.user
             education = request.POST["education"]
             career = request.POST["career"]
             skills = request.POST["skills"]
             about = request.POST["about"]
-            new_CV = CV.objects.create(person=request.user,education=education,career=career,skills=skills,description=about)
+            new_CV = CV.objects.create(person=user,education=education,career=career,skills=skills,description=about)
             new_CV.save()
+            user.has_CV = True
+            user.save()
             return HttpResponseRedirect(reverse("index"))
         else:
             return render(request, "employment/create_CV.html", {
@@ -123,3 +126,25 @@ def allCVs(request):
     return render(request, "employment/allCVs.html", {
         "CVs": CVs
     })
+
+def edit_CV(request):
+    cv = CV.objects.get(person=request.user)
+    if request.method == "POST":
+        education = request.POST["education"]
+        career = request.POST["career"]
+        skills = request.POST["skills"]
+        about = request.POST["about"]
+        cv.education = education
+        cv.skills = skills
+        cv.description = about
+        cv.career = career
+        cv.save() 
+        return HttpResponseRedirect(reverse("index"))
+    else:     
+        cv = CV.objects.get(person=request.user)
+        return render(request, "employment/create_CV.html",{
+            "edu": cv.education,
+            "skills": cv.skills,
+            "description": cv.description,
+            "career": cv.career,
+        })

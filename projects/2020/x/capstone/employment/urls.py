@@ -10,4 +10,5 @@ urlpatterns = [
     path("register/employer", views.emp_register, name="emp_register"),
     path("create_CV", views.create_CV, name="create_CV"),
     path("allCVs", views.allCVs, name="allCVs"),
+    path("edit", views.edit_CV, name="edit_CV"),
 ]

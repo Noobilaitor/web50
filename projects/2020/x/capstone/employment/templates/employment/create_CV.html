@@ -1,32 +1,39 @@
 {% extends "employment/layout.html" %}
 
 {% block body %}
+{% if user.has_CV %}
+<h1 class="not_user">Edit Your CV {{user.first_name}}</h1>
+{% else %}
 <h1 class="not_user">Create Your CV {{user.first_name}}</h1>
+{% endif %}
 <div id="form_body">
     <div id="form">
         {% if message %}
             <div>{{ message }}</div>
         {% endif %}
-
-        <form class="form" action="{% url 'create_CV' %}" enctype="multipart/form-data" method="post">
+        <form class="form" {% if user.has_CV %} action="{% url 'edit_CV' %}" {% else %} action="{% url 'create_CV' %}" {% endif %} enctype="multipart/form-data" method="post">
             {% csrf_token %}
             <div class="form-group">
                 <label id="edu" for="education">Education:</label>
-                <textarea name="education" id="education" cols="40" rows="10"></textarea>
+                <textarea name="education" id="education" cols="40" rows="10">{{edu}}</textarea>
             </div>
             <div class="form-group">
                 <label id="edu" for="career">Career:</label>
-                <textarea name="career" id="career" cols="40" rows="10"></textarea>
+                <textarea name="career" id="career" cols="40" rows="10">{{career}}</textarea>
             </div>
             <div id="skills" class="form-group">
                 <label id="edu" for="skills">Skills:</label>
-                <textarea name="skills" id="skills" cols="40" rows="5" placeholder="Write the skills you have and seperate them by a comma"></textarea>
+                <textarea name="skills" id="skills" cols="40" rows="5" placeholder="Write the skills you have and seperate them by a comma">{{skills}}</textarea>
             </div>
             <div class="form-group">
                 <label id="edu" for="about">About you:</label>
-                <textarea name="about" id="career" cols="40" rows="10"></textarea>
+                <textarea name="about" id="career" cols="40" rows="10">{{description}}</textarea>
             </div>
+            {% if user.has_CV %}
+            <input class="btn btn-primary" type="submit" value="Edit CV">
+            {% else %}
             <input class="btn btn-primary" type="submit" value="Create CV">
+            {% endif %}
         </form>
     </div>
 </div>
