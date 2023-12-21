@@ -5,6 +5,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.core.exceptions import ObjectDoesNotExist
+from django.utils.datastructures import MultiValueDictKeyError
 from django.core.paginator import Paginator
 import json
 from django.http import JsonResponse
@@ -41,12 +42,15 @@ def logout_view(request):
 
 def register(request):
     if request.method == "POST":
+        first = request.POST["first name"]
+        last = request.POST["last name"]
         username = request.POST["username"]
         email = request.POST["email"]
+        
         image = request.FILES['image']
         fs = FileSystemStorage()
         fs.save(image.name, image)
-
+        
         # Ensure password matches confirmation
         password = request.POST["password"]
         confirmation = request.POST["confirmation"]
@@ -57,7 +61,7 @@ def register(request):
 
         # Attempt to create new user
         try:
-            user = User.objects.create_user(username, email, password, profile_pic=image, employee=True)
+            user = User.objects.create_user(username, email, password,first_name=first,last_name=last, profile_pic=image, employee=True)
             user.save()
         except IntegrityError:
             return render(request, "employment/register.html", {
@@ -96,3 +100,26 @@ def emp_register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "employment/emp_register.html")
+
+def create_CV(request):
+    if request.method == "POST":
+        if request.user.employee: 
+            education = request.POST["education"]
+            career = request.POST["career"]
+            skills = request.POST["skills"]
+            about = request.POST["about"]
+            new_CV = CV.objects.create(person=request.user,education=education,career=career,skills=skills,description=about)
+            new_CV.save()
+            return HttpResponseRedirect(reverse("index"))
+        else:
+            return render(request, "employment/create_CV.html", {
+                "message": "You are not an employee."
+            })
+    else:
+        return render(request, "employment/create_CV.html")
+
+def allCVs(request):
+    CVs = CV.objects.all()
+    return render(request, "employment/allCVs.html", {
+        "CVs": CVs
+    })

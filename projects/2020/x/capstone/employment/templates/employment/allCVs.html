@@ -1,0 +1,6 @@
+{% extends "employment/layout.html" %}
+{% block body %}
+    {% for CV in CVs %}
+    <h1>{{CV.person}}</h1>
+    {% endfor %}
+{% endblock body %}

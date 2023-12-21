@@ -1,0 +1,34 @@
+{% extends "employment/layout.html" %}
+
+{% block body %}
+<h1 class="not_user">Create Your CV {{user.first_name}}</h1>
+<div id="form_body">
+    <div id="form">
+        {% if message %}
+            <div>{{ message }}</div>
+        {% endif %}
+
+        <form class="form" action="{% url 'create_CV' %}" enctype="multipart/form-data" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label id="edu" for="education">Education:</label>
+                <textarea name="education" id="education" cols="40" rows="10"></textarea>
+            </div>
+            <div class="form-group">
+                <label id="edu" for="career">Career:</label>
+                <textarea name="career" id="career" cols="40" rows="10"></textarea>
+            </div>
+            <div id="skills" class="form-group">
+                <label id="edu" for="skills">Skills:</label>
+                <textarea name="skills" id="skills" cols="40" rows="5" placeholder="Write the skills you have and seperate them by a comma"></textarea>
+            </div>
+            <div class="form-group">
+                <label id="edu" for="about">About you:</label>
+                <textarea name="about" id="career" cols="40" rows="10"></textarea>
+            </div>
+            <input class="btn btn-primary" type="submit" value="Create CV">
+        </form>
+    </div>
+</div>
+
+{% endblock body %}

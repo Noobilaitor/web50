@@ -1,32 +1,35 @@
 {% load static %}
 
 <!DOCTYPE html>
-<html lang="en">
+<html id="html" lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link href="{% static 'employment/styles.css' %}" rel="stylesheet">
+    <script src="{% static 'employment/inbox.js' %}"></script>
 </head>
 <body>
     <div id="navbar">
-        <h1 id="title"><a href="">Place Holder</a></h1>
+        <h1 id="title"><a href="{% url "index" %}">Place Holder</a></h1>
         {% if user.employer %}
-        <h3 class="nav_items"><a href="">Find employees</a></h3>
+        <h3 class="nav_items"><a href="{% url "allCVs" %}">Find employees</a></h3>
         <h3 class="nav_items"><a href="">Search for a CV</a></h3>
         {% else %}
         <h3 class="nav_items"><a href="">Find a Job</a></h3>
-        <h3 class="nav_items"><a href="">Create Your CV</a></h3>
+        <h3 class="nav_items"><a href="{% url "create_CV" %}">Create Your CV</a></h3>
         {% endif %}
-        {% if user.employer or user.employee %}
-        <h3 id="log_in" class="nav_items"><a href="{% url "logout" %}">Log out</a></h3>
-        <h3 class="nav_items"><img id="profile_pic" src="{{user.profile_pic.url}}" alt="profile picture"></h3>
-        <h3 class="nav_items"><a href="">{{user.username}}</a></h3>
-        {% else %}
-        <h3 id="log_in" class="nav_items"><a href="{% url 'login' %}">Log In</a></h3>
-        <h3 class="nav_items"><a href="{% url 'register' %}">Register</a></h3>
-        <h3 class="nav_items"><a href="{% url 'emp_register' %}">For Employers</a></h3>
-        {% endif %}
+        <div id="log_in">
+            {% if user.employer or user.employee %}
+            <h3 class="nav_items"><a href="{% url "logout" %}">Log out</a></h3>
+            <h3 class="nav_items"><img id="profile_pic" src="{{user.profile_pic.url}}" alt="profile picture"></h3>
+            <h3 class="nav_items"><a href="">{{user.username}}</a></h3>
+            {% else %}
+            <h3 class="nav_items"><a href="{% url 'login' %}">Log In</a></h3>
+            <h3 class="nav_items"><a href="{% url 'register' %}">Register</a></h3>
+            <h3 class="nav_items"><a href="{% url 'emp_register' %}">For Employers</a></h3>
+            {% endif %}
+        </div>
     </div>
 
     <div id="body">
