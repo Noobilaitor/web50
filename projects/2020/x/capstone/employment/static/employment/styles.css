@@ -121,3 +121,52 @@ a{
     display: flex;
     flex-direction: column;
 }
+
+#singleCV{
+    margin-top: 1rem;
+    margin-left: 2rem;
+    border: 0.3rem solid;
+    border-color: black;
+    border-radius: 1rem;
+    width: fit-content;
+    height: fit-content;
+    padding-left: 0.2rem;
+    padding-right: 0.2rem;
+}
+
+#person{
+    margin-bottom: 0;
+    margin-top: 0;
+}
+#desc{
+    margin-top: 0;
+}
+
+.per_ski{
+    display: flex;
+}
+
+.skill{
+    padding-left: 0.1rem;
+    padding-right: 0.1rem;
+    margin-bottom: 0;
+    margin-top: 0;
+    display: flex;
+    margin-left: 0.5rem;
+    background-color: #7bff01;
+    border-radius: 0.5rem;
+    height: fit-content
+}
+
+#skill{
+    display: flex;
+    align-items: center;
+}
+
+.selects{
+    display:flex;
+}
+
+#sel_cat{
+    margin-right: 3rem;
+}

@@ -14,3 +14,5 @@ class CV(models.Model):
     description = models.CharField(max_length=1000)
     education = models.CharField(max_length=1000)
     career = models.CharField(max_length=1000)
+    job = models.CharField(max_length=64, default="engineer")
+    major = models.CharField(max_length=64, default="chemical engineering")

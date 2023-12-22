@@ -14,6 +14,8 @@ from django.core.files.storage import FileSystemStorage
 
 # Create your views here.
 
+categories = ["engineer","medicine","business"]
+
 def index(request):
     return render(request, "employment/index.html")
 
@@ -47,10 +49,6 @@ def register(request):
         username = request.POST["username"]
         email = request.POST["email"]
         
-        image = request.FILES['image']
-        fs = FileSystemStorage()
-        fs.save(image.name, image)
-        
         # Ensure password matches confirmation
         password = request.POST["password"]
         confirmation = request.POST["confirmation"]
@@ -58,7 +56,20 @@ def register(request):
             return render(request, "employment/register.html", {
                 "message": "Passwords must match."
             })
-
+        try:
+            image = request.FILES['image']
+        except MultiValueDictKeyError:
+            try:
+                user = User.objects.create_user(username, email, password,first_name=first,last_name=last, employee=True)
+                user.save()
+            except IntegrityError:
+                return render(request, "employment/register.html", {
+                    "message": "Username already taken."
+                })
+            login(request, user)
+            return HttpResponseRedirect(reverse("index"))
+        fs = FileSystemStorage()
+        fs.save(image.name, image)
         # Attempt to create new user
         try:
             user = User.objects.create_user(username, email, password,first_name=first,last_name=last, profile_pic=image, employee=True)
@@ -76,9 +87,6 @@ def emp_register(request):
     if request.method == "POST":
         username = request.POST["username"]
         email = request.POST["email"]
-        image = request.FILES['image']
-        fs = FileSystemStorage()
-        fs.save(image.name, image)
 
         # Ensure password matches confirmation
         password = request.POST["password"]
@@ -88,6 +96,21 @@ def emp_register(request):
                 "message": "Passwords must match."
             })
 
+        # Attempt to create new user
+        try:
+            image = request.FILES['image']
+        except MultiValueDictKeyError:
+            try:
+                user = User.objects.create_user(username, email, password, employer=True)
+                user.save()
+            except IntegrityError:
+                return render(request, "employment/emp_register.html", {
+                    "message": "Username already taken."
+                })
+            login(request, user)
+            return HttpResponseRedirect(reverse("index"))
+        fs = FileSystemStorage()
+        fs.save(image.name, image)
         # Attempt to create new user
         try:
             user = User.objects.create_user(username, email, password, profile_pic=image, employer=True)
@@ -103,23 +126,34 @@ def emp_register(request):
 
 def create_CV(request):
     if request.method == "POST":
-        if request.user.employee: 
-            user = request.user
-            education = request.POST["education"]
-            career = request.POST["career"]
-            skills = request.POST["skills"]
-            about = request.POST["about"]
-            new_CV = CV.objects.create(person=user,education=education,career=career,skills=skills,description=about)
-            new_CV.save()
-            user.has_CV = True
-            user.save()
-            return HttpResponseRedirect(reverse("index"))
+        if request.user.employee:
+            if not request.user.has_CV:       
+                user = request.user
+                education = request.POST["education"]
+                career = request.POST["career"]
+                skills = request.POST["skills"]
+                about = request.POST["about"]
+                job = request.POST["cat"]
+                major = request.POST["s_cat"]
+                new_CV = CV.objects.create(job=job, major=major, person=user,education=education,career=career,skills=skills,description=about)
+                new_CV.save()
+                user.has_CV = True
+                user.save()
+                return HttpResponseRedirect(reverse("index"))
+            else:
+                return render(request, "employment/create_CV.html", {
+                "message": "You already have a CV.",
+                "cats": categories
+            })
         else:
             return render(request, "employment/create_CV.html", {
-                "message": "You are not an employee."
+                "message": "You are not an employee.",
+                "cats": categories
             })
     else:
-        return render(request, "employment/create_CV.html")
+        return render(request, "employment/create_CV.html",{
+            "cats": categories
+        })
 
 def allCVs(request):
     CVs = CV.objects.all()
@@ -134,10 +168,14 @@ def edit_CV(request):
         career = request.POST["career"]
         skills = request.POST["skills"]
         about = request.POST["about"]
+        job = request.POST["cat"]
+        major = request.POST["s_cat"]
         cv.education = education
         cv.skills = skills
         cv.description = about
         cv.career = career
+        cv.job = job
+        cv.major = major
         cv.save() 
         return HttpResponseRedirect(reverse("index"))
     else:     
@@ -147,4 +185,7 @@ def edit_CV(request):
             "skills": cv.skills,
             "description": cv.description,
             "career": cv.career,
+            "cats":categories,
+            "job": cv.job,
+            "major": cv.major,
         })

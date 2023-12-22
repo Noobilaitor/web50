@@ -1,7 +1,7 @@
 {% extends "employment/layout.html" %}
 
 {% block body %}
-{% if user.has_CV %}
+{% if edu %}
 <h1 class="not_user">Edit Your CV {{user.first_name}}</h1>
 {% else %}
 <h1 class="not_user">Create Your CV {{user.first_name}}</h1>
@@ -11,7 +11,7 @@
         {% if message %}
             <div>{{ message }}</div>
         {% endif %}
-        <form class="form" {% if user.has_CV %} action="{% url 'edit_CV' %}" {% else %} action="{% url 'create_CV' %}" {% endif %} enctype="multipart/form-data" method="post">
+        <form class="form" {% if edu %} action="{% url 'edit_CV' %}" {% else %} action="{% url 'create_CV' %}" {% endif %} enctype="multipart/form-data" method="post">
             {% csrf_token %}
             <div class="form-group">
                 <label id="edu" for="education">Education:</label>
@@ -21,6 +21,31 @@
                 <label id="edu" for="career">Career:</label>
                 <textarea name="career" id="career" cols="40" rows="10">{{career}}</textarea>
             </div>
+            <div class="selects">
+                <div id="sel_cat">
+                    <label id="edu" for="cat">Job type:</label>
+                    <select name="cat" id="cat">
+                        {% if job %}
+                        <option value="{{job}}">{{job}}</option>
+                        {% else %}
+                        <option value="">---</option>
+                        {% endif %}
+                        {% for cat in cats %}
+                        <option value="{{cat}}">{{cat}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label id="edu" for="s_cat">Job:</label>
+                    <select name="s_cat" id="s_cat">
+                        {% if major %}
+                        <option value="{{major}}">{{major}}</option>
+                        {% else %}
+                        <option value="">---</option>
+                        {% endif %}
+                    </select>
+                </div>
+            </div>
             <div id="skills" class="form-group">
                 <label id="edu" for="skills">Skills:</label>
                 <textarea name="skills" id="skills" cols="40" rows="5" placeholder="Write the skills you have and seperate them by a comma">{{skills}}</textarea>
@@ -29,7 +54,7 @@
                 <label id="edu" for="about">About you:</label>
                 <textarea name="about" id="career" cols="40" rows="10">{{description}}</textarea>
             </div>
-            {% if user.has_CV %}
+            {% if edu %}
             <input class="btn btn-primary" type="submit" value="Edit CV">
             {% else %}
             <input class="btn btn-primary" type="submit" value="Create CV">
