@@ -11,4 +11,8 @@ urlpatterns = [
     path("create_CV", views.create_CV, name="create_CV"),
     path("allCVs", views.allCVs, name="allCVs"),
     path("edit", views.edit_CV, name="edit_CV"),
+    path("filter/CVs", views.filter_CV, name="filter_CV"),
+    
+    #API routes
+    path("filter/search/<str:content>", views.search, name="filter_CV")
 ]

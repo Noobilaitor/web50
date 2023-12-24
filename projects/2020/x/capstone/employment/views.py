@@ -189,3 +189,45 @@ def edit_CV(request):
             "job": cv.job,
             "major": cv.major,
         })
+
+def filter_CV(request):
+    return render(request, "employment/filter_CV.html",{
+            "cats": categories
+        })
+
+def search(request, content):
+    content = content.split(",")
+    Cvs = CV.objects.all()
+    name = []
+    desc = []
+    skilll = []
+    job = []
+    for cv in Cvs:
+        chosen_type = "c"
+        chosen_job = "m"
+        chosen_skill = "n"
+        if content[0] != "":
+            all_skills = cv.skills
+            all_skills = all_skills.split(",")
+            skills = []
+            for skill in all_skills:
+                skill = skill.replace(" ", "")
+                skills.append(skill)
+            if content[0] in skills:
+                chosen_skill = cv
+        else:
+            chosen_skill = cv
+        if cv.job == content[1] or content[1] == "":
+            chosen_job = cv
+        if cv.major == content[2] or content[2] == "---":
+            chosen_type = cv
+        if chosen_type == chosen_job == chosen_skill:
+            name.append(cv.person.username)
+            desc.append(cv.description)
+            skilll.append(cv.skills)
+            job.append(cv.job)
+    return JsonResponse({"name": name, "desc": desc, "job": job, "skill": skilll,})
+
+#def profile(request, id):
+    user = User.objects.get(pk=id)
+    

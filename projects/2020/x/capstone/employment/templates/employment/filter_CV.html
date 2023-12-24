@@ -1,0 +1,35 @@
+{% extends "employment/layout.html" %}
+
+{% block body %}
+<div id="search_div">
+    <h2 id="search">Search for a skill:</h2>
+    <h2 id="or">and/Or</h2>
+    <h2 id="filter">Filter By:</h2>
+</div>
+<div id="all_search">
+    <div>
+        <input type="text" name="search" id="search_bar">
+        <button id="search_btn">Search</button>
+    </div>
+    <div id="selects">
+        <div id="sel_cat">
+            <label id="edu" for="cat">Job type:</label>
+            <select name="cat" id="cat">
+                <option value="">---</option>
+                {% for cat in cats %}
+                <option value="{{cat}}">{{cat}}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label id="edu" for="s_cat">Job:</label>
+            <select name="s_cat" id="s_cat">
+                <option value="">---</option>
+            </select>
+        </div>
+    </div>
+</div>
+<div id="ah">
+
+</div>
+{% endblock %}
