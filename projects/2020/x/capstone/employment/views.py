@@ -156,7 +156,7 @@ def create_CV(request):
         })
 
 def allCVs(request):
-    CVs = CV.objects.all()
+    CVs = CV.objects.all().order_by("-id")
     return render(request, "employment/allCVs.html", {
         "CVs": CVs
     })
@@ -219,7 +219,7 @@ def search(request, content):
             chosen_skill = cv
         if cv.job == content[1] or content[1] == "":
             chosen_job = cv
-        if cv.major == content[2] or content[2] == "---":
+        if cv.major == content[2] or content[2] == "---" or content[2] == "":
             chosen_type = cv
         if chosen_type == chosen_job == chosen_skill:
             name.append(cv.person.username)
@@ -227,7 +227,10 @@ def search(request, content):
             skilll.append(cv.skills)
             job.append(cv.job)
     return JsonResponse({"name": name, "desc": desc, "job": job, "skill": skilll,})
-
-#def profile(request, id):
-    user = User.objects.get(pk=id)
     
+def profile(request, user):
+    user = User.objects.get(username=user)
+    cv = CV.objects.get(person=user)
+    return render(request, "employment/profile.html", {
+        "cv": cv
+    })

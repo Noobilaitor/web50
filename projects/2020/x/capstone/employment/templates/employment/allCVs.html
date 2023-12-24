@@ -1,11 +1,12 @@
 {% extends "employment/layout.html" %}
 {% load extras %}
 {% block body %}
+<h1 id="all_CVs">All CVs</h1>
 <div>
     {% for CV in CVs %}
     <div id='singleCV'>
         <div class="per_ski">
-            <h1 id="person">{{CV.person}}</h1>
+            <a href="{% url "profile" CV.person.username %}"><h1 id="person">{{CV.person}}</h1></a>
             <div id="skill">
                 <h3 class="skill">{{CV.job}}</h3>
                 {% for skill in CV.skills|skill %}

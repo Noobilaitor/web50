@@ -27,7 +27,7 @@
             {% if user.employer or user.employee %}
             <h3 class="nav_items"><a href="{% url "logout" %}">Log out</a></h3>
             <h3 class="nav_items"><img id="profile_pic" src="{{user.profile_pic.url}}" alt="profile picture"></h3>
-            <h3 class="nav_items"><a href="">{{user.username}}</a></h3>
+            <h3 class="nav_items"><a href="{% url "profile" user.username %}">{{user.username}}</a></h3>
             {% else %}
             <h3 class="nav_items"><a href="{% url 'login' %}">Log In</a></h3>
             <h3 class="nav_items"><a href="{% url 'register' %}">Register</a></h3>

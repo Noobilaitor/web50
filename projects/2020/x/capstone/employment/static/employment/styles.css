@@ -211,3 +211,30 @@ a{
     width: 55%;
     justify-content: flex-end
 }
+
+#p_job{
+    margin-left: 2rem;
+    margin-right: 0.4rem;
+}
+
+#p_skill{
+    display: flex;
+    margin-left: 18rem;
+    margin-right: 2rem;
+    font-size: 28px;
+}
+
+.p_skills{
+    margin-top: 0.6rem;
+    font-size:large;
+}
+
+.p_edu{
+    display: flex;
+    align-items: center;
+}
+#all_CVs{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

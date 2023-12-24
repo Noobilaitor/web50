@@ -39,7 +39,6 @@ function change_cat(value){
             major_e.value = engineer[major]
             major_e.textContent = engineer[major]
             s_cat.append(major_e)
-            console.log(s_cat)
         }
     } else if(value == "medicine"){
         for (major in medicine){
@@ -47,7 +46,6 @@ function change_cat(value){
             major_e.value = medicine[major]
             major_e.textContent = medicine[major]
             s_cat.append(major_e)
-            console.log(s_cat)
         }
     } else if(value == "business"){
         for (major in business){
@@ -55,7 +53,6 @@ function change_cat(value){
             major_e.value = business[major]
             major_e.textContent = business[major]
             s_cat.append(major_e)
-            console.log(s_cat)
         }
     } else if(value == ""){
         major_e = document.createElement("option")
@@ -86,9 +83,12 @@ function search(){
             per_ski = document.createElement("div")
             per_ski.setAttribute('class','per_ski')
             cvs.append(per_ski)
-            person = document.createElement("h1")
+            person = document.createElement("a")
             person.setAttribute('id','person')
             person.textContent = result.name[i]
+            const domain = window.location.origin
+            const new_domain = domain + `/user/${result.name[i]}`
+            person.setAttribute('href',new_domain)
             per_ski.append(person)
             skill_div = document.createElement("div")
             skill_div.setAttribute('id','skill')
