@@ -16,3 +16,11 @@ class CV(models.Model):
     career = models.CharField(max_length=1000)
     job = models.CharField(max_length=64, default="engineer")
     major = models.CharField(max_length=64, default="chemical engineering")
+
+class Job(models.Model):
+    person = models.ForeignKey(User, on_delete=models.CASCADE)
+    skills = models.CharField(max_length=100)
+    description = models.CharField(max_length=1000)
+    salary = models.CharField(max_length=64, default="0")
+    job = models.CharField(max_length=64, default="engineer")
+    major = models.CharField(max_length=64, default="chemical engineering")    

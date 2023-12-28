@@ -1,0 +1,24 @@
+{% extends "employment/layout.html" %}
+{% load extras %}
+{% block body %}
+
+<h1 class="home">{{job.person.username}}'s job</h1>
+<div class="home"><h2 id="p_job">looking for {{job.job}}</h2>
+<h2>majored in {{job.major}}</h2></div>
+<div id="all_search">
+    <h2 id="p_skill">Skills:</h2>
+    <ul>
+    {% for skill in job.skills|skill %}
+        <li class="p_skills">{{skill}}</li>
+    {% endfor %}
+    </ul>
+</div>
+<div id="all_search">
+    <h2 id="p_skill">Description: </h2>
+    <h4 class="p_edu">{{job.description}}</h4>
+</div>
+<div id="all_search">
+    <h2 id="p_skill">Salary: </h2>
+    <h4 id="sal" class="p_edu">{{job.salary}}$/month</h4>
+</div>
+{% endblock body %}

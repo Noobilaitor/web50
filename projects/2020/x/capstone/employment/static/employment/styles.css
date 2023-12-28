@@ -238,3 +238,22 @@ a{
     align-items: center;
     justify-content: center;
 }
+
+#types{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    
+}
+
+#cat_link{
+    margin-left: 5rem;
+    font-size: 1.5rem;
+}
+
+.filter{
+    margin-left: 250px;
+}
+#sal{
+    font-size: larger;
+}

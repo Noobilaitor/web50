@@ -13,10 +13,10 @@
     <div id="navbar">
         <h1 id="title"><a href="{% url "index" %}">Place Holder</a></h1>
         {% if user.employer %}
-        <h3 class="nav_items"><a href="{% url "allCVs" %}">Find employees</a></h3>
-        <h3 class="nav_items"><a href="">Search for a CV</a></h3>
+        <h3 class="nav_items"><a href="{% url 'filter_CV' %}">Find employees</a></h3>
+        <h3 class="nav_items"><a href="{% url "create_job" %}">Create a Job</a></h3>
         {% else %}
-        <h3 class="nav_items"><a href="">Find a Job</a></h3>
+        <h3 class="nav_items"><a href="{% url "alljobs" %}">Find a Job</a></h3>
             {% if user.has_CV %}
             <h3 class="nav_items"><a href="{% url "edit_CV" %}">Edit Your CV</a></h3>
             {% else %}

@@ -1,4 +1,5 @@
 {% extends "employment/layout.html" %}
+{% load extras %}
 {% block body %}
 {% if not user.is_authenticated %}
 <div>
@@ -6,6 +7,35 @@
     <div class="home"><h2 id="sea">Search between hundreds of jobs</h2>
     <h2><a href="{% url "create_CV" %}">Create your own CV</a></h2></div>
     <h3>Filter between jobs:</h3>
+</div>
+{% elif user.employer %}
+<div>
+    <h1 class="not_user">Find any CV right now!</h1>
+    <div class="home"><a href="{% url "filter_CV" %}"><h2 id="sea">Search between hundreds of CVs</h2></a>
+    <h2><a href="">Post your own job</a></h2></div>
+    <h2 class="filter">Filter CVs by job:</h2>
+    <ul id="types">
+        {% for cat in cats %}
+        <a data-id="{{cat}}" id="cat_link" href="{% url "filter_CVV" cat %}"><li>{{cat}}</li></a>
+        {% endfor %}
+    </ul>
+</div>
+<h1 id="all_CVs">All CVs</h1>
+<div>
+    {% for CV in CVs %}
+    <div id='singleCV'>
+        <div class="per_ski">
+            <a href="{% url "profile" CV.person.username %}"><h1 id="person">{{CV.person}}</h1></a>
+            <div id="skill">
+                <h3 class="skill">{{CV.job}}</h3>
+                {% for skill in CV.skills|skill %}
+                <h3 class="skill">{{skill}}</h3>
+                {% endfor %}
+            </div>
+        </div>
+        <h4 id="desc">{{CV.description}}</h4>
+    </div>
+    {% endfor %}
 </div>
 {% endif %}
 {% endblock body %}

@@ -1,0 +1,68 @@
+{% extends "employment/layout.html" %}
+
+{% block body %}
+{% if salary %}
+<h1 class="not_user">Edit your job</h1>
+{% else %}
+<h1 class="not_user">Post a new job</h1>
+{% endif %}
+
+<div id="form_body">
+    <div id="form">
+        {% if message %}
+            <div>{{ message }}</div>
+        {% endif %}
+        {% if salary %}
+        <form class="form" action="{% url 'edit_job' %}" enctype="multipart/form-data" method="post">
+        {% else %}
+        <form class="form" action="{% url 'create_job' %}"  enctype="multipart/form-data" method="post">
+        {% endif %}
+        <form class="form" {% if salary %} action="{% url 'edit_job' %}" {% else %} action="{% url 'create_job' %}" {% endif %} enctype="multipart/form-data" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label id="edu" for="desc">Job description:</label>
+                <textarea name="desc" id="career" cols="40" rows="10">{{description}}</textarea>
+            </div>
+            <div id="skills" class="form-group">
+                <label id="edu" for="skills">Skills:</label>
+                <textarea name="skills" id="skills" cols="40" rows="5" placeholder="Write the skills you have and seperate them by a comma">{{skills}}</textarea>
+            </div>
+            <div class="selects">
+                <div id="sel_cat">
+                    <label id="edu" for="cat">Job type:</label>
+                    <select name="cat" id="cat">
+                        {% if job %}
+                        <option value="{{job}}">{{job}}</option>
+                        {% else %}
+                        <option value="">---</option>
+                        {% endif %}
+                        {% for cat in cats %}
+                        <option value="{{cat}}">{{cat}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label id="edu" for="s_cat">Job:</label>
+                    <select name="s_cat" id="s_cat">
+                        {% if major %}
+                        <option value="{{major}}">{{major}}</option>
+                        {% else %}
+                        <option value="">---</option>
+                        {% endif %}
+                    </select>
+                </div>
+            </div>
+            <div id="salary" class="form-group">
+                <label id="edu" for="salary">Monthly salary:</label>
+                <input value="{{salary}}" name="salary" type="number">
+            </div>
+            {% if salary %}
+            <input class="btn btn-primary" type="submit" value="Edit CV">
+            {% else %}
+            <input class="btn btn-primary" type="submit" value="Create Job">
+            {% endif %}
+        </form>
+    </div>
+</div>
+
+{% endblock body %}

@@ -17,7 +17,11 @@ from django.core.files.storage import FileSystemStorage
 categories = ["engineer","medicine","business"]
 
 def index(request):
-    return render(request, "employment/index.html")
+    CVs = CV.objects.all()
+    return render(request, "employment/index.html",{
+        "cats": categories,
+        "CVs": CVs
+    })
 
 def login_view(request):
     if request.method == "POST":
@@ -192,7 +196,13 @@ def edit_CV(request):
 
 def filter_CV(request):
     return render(request, "employment/filter_CV.html",{
-            "cats": categories
+            "cats": categories,
+        })
+
+def filter_CVV(request, type):
+    return render(request, "employment/filter_CV.html",{
+            "cats": categories,
+            "type": type
         })
 
 def search(request, content):
@@ -230,7 +240,112 @@ def search(request, content):
     
 def profile(request, user):
     user = User.objects.get(username=user)
-    cv = CV.objects.get(person=user)
+    try:
+        cv = CV.objects.get(person=user)
+    except:
+        job = Job.objects.get(person=user)
+        return render(request, "employment/com_profile.html", {
+            "job": job
+        })
+    
     return render(request, "employment/profile.html", {
         "cv": cv
     })
+
+def create_job(request):
+    if request.method == "POST":
+        if request.user.employer:     
+            user = request.user
+            salary = request.POST["salary"]
+            skills = request.POST["skills"]
+            desc = request.POST["desc"]
+            job = request.POST["cat"]
+            major = request.POST["s_cat"]
+            new_job = Job.objects.create(job=job, major=major, person=user,skills=skills,description=desc, salary=salary)
+            new_job.save()
+            return HttpResponseRedirect(reverse("index"))
+        else:
+            return render(request, "employment/create_job.html", {
+                "message": "You are not an employer.",
+                "cats": categories
+            })
+    else:
+        return render(request, "employment/create_job.html",{
+            "cats": categories
+        })
+
+def alljobs(request):
+    jobs = Job.objects.all().order_by("-id")
+    return render(request, "employment/alljobs.html", {
+        "jobs": jobs
+    })
+
+def edit_job(request):
+    job = Job.objects.get(person=request.user)
+    if request.method == "POST":
+        salary = request.POST["salary"]
+        skills = request.POST["skills"]
+        desc = request.POST["desc"]
+        jobb = request.POST["cat"]
+        major = request.POST["s_cat"]
+        job.salary = str(salary)
+        job.skills = skills
+        job.description = desc
+        job.job = jobb
+        job.major = major
+        job.save() 
+        return HttpResponseRedirect(reverse("index"))
+    else:     
+        job = Job.objects.get(person=request.user)
+        return render(request, "employment/create_job.html",{
+            "salary": job.salary,
+            "skills": job.skills,
+            "description": job.description,
+            "cats":categories,
+            "job": job.job,
+            "major": job.major,
+        })
+
+def filter_job(request):
+    return render(request, "employment/filter_job.html",{
+            "cats": categories,
+        })
+
+def filter_jobb(request, type):
+    return render(request, "employment/filter_job.html",{
+            "cats": categories,
+            "type": type
+        })
+
+def search_job(request, content):
+    content = content.split(",")
+    Jobs = Job.objects.all()
+    name = []
+    desc = []
+    skilll = []
+    jobb = []
+    for job in Jobs:
+        chosen_type = "c"
+        chosen_job = "m"
+        chosen_skill = "n"
+        if content[0] != "":
+            all_skills = job.skills
+            all_skills = all_skills.split(",")
+            skills = []
+            for skill in all_skills:
+                skill = skill.replace(" ", "")
+                skills.append(skill)
+            if content[0] in skills:
+                chosen_skill = job
+        else:
+            chosen_skill = job
+        if job.job == content[1] or content[1] == "":
+            chosen_job = job
+        if job.major == content[2] or content[2] == "---" or content[2] == "":
+            chosen_type = job
+        if chosen_type == chosen_job == chosen_skill:
+            name.append(job.person.username)
+            desc.append(job.description)
+            skilll.append(job.skills)
+            jobb.append(job.job)
+    return JsonResponse({"name": name, "desc": desc, "job": jobb, "skill": skilll,})
