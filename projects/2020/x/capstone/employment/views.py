@@ -17,7 +17,7 @@ from django.core.files.storage import FileSystemStorage
 categories = ["engineer","medicine","business"]
 
 def index(request):
-    CVs = CV.objects.all()
+    CVs = CV.objects.filter(is_active=True).all()
     return render(request, "employment/index.html",{
         "cats": categories,
         "CVs": CVs
@@ -160,7 +160,7 @@ def create_CV(request):
         })
 
 def allCVs(request):
-    CVs = CV.objects.all().order_by("-id")
+    CVs = CV.objects.filter(is_active=True).all().order_by("-id")
     return render(request, "employment/allCVs.html", {
         "CVs": CVs
     })
@@ -207,7 +207,7 @@ def filter_CVV(request, type):
 
 def search(request, content):
     content = content.split(",")
-    Cvs = CV.objects.all()
+    Cvs = CV.objects.filter(is_active=True).all()
     name = []
     desc = []
     skilll = []
@@ -249,7 +249,7 @@ def profile(request, user):
         })
     
     return render(request, "employment/profile.html", {
-        "cv": cv
+        "cv": cv,
     })
 
 def create_job(request):
@@ -263,6 +263,8 @@ def create_job(request):
             major = request.POST["s_cat"]
             new_job = Job.objects.create(job=job, major=major, person=user,skills=skills,description=desc, salary=salary)
             new_job.save()
+            user.has_job = True
+            user.save()
             return HttpResponseRedirect(reverse("index"))
         else:
             return render(request, "employment/create_job.html", {
@@ -275,7 +277,7 @@ def create_job(request):
         })
 
 def alljobs(request):
-    jobs = Job.objects.all().order_by("-id")
+    jobs = Job.objects.filter(is_active=True).all().order_by("-id")
     return render(request, "employment/alljobs.html", {
         "jobs": jobs
     })
@@ -319,7 +321,7 @@ def filter_jobb(request, type):
 
 def search_job(request, content):
     content = content.split(",")
-    Jobs = Job.objects.all()
+    Jobs = Job.objects.filter(is_active=True).all()
     name = []
     desc = []
     skilll = []
@@ -349,3 +351,53 @@ def search_job(request, content):
             skilll.append(job.skills)
             jobb.append(job.job)
     return JsonResponse({"name": name, "desc": desc, "job": jobb, "skill": skilll,})
+
+def recruit(request, user):
+    cur_user = request.user
+    user = User.objects.get(username=user)
+    if user.employee and cur_user.employer:
+        if cur_user in user.CV_requests.all():
+            user.CV_requests.remove(cur_user)
+            user.save()
+            return JsonResponse({"message": "fail"})
+        else:
+            user.CV_requests.add(cur_user)
+            user.save()
+            return JsonResponse({"message": "success"})
+    elif user.employer and cur_user.employee:
+        if cur_user in user.job_requests.all():
+            user.job_requests.remove(cur_user)
+            user.save()
+            return JsonResponse({"result": "fail"})
+        else:
+            user.job_requests.add(cur_user)
+            user.save()
+            return JsonResponse({"result": "success"})
+
+def notification(request):
+    return render(request, "employment/notification.html",{
+    })
+
+def accept(request, user):
+    cur_user = request.user
+    user = User.objects.get(username=user)
+    if cur_user.employee:
+        cv = CV.objects.get(person=cur_user)
+        job = Job.objects.get(person=user)
+        cv.is_active = False
+        job.is_active = False
+        cv.save()
+        job.save()
+        cur_user.working.add(user)
+        cur_user.CV_requests.remove(user)
+        return JsonResponse({"message": "accepted"})
+    elif cur_user.employer:
+        cv = CV.objects.get(person=user)
+        job = Job.objects.get(person=cur_user)
+        cv.is_active = False
+        job.is_active = False
+        cv.save()
+        job.save()
+        cur_user.working.add(user)
+        cur_user.job_requests.remove(user)
+        return JsonResponse({"message": "j_accepted"})

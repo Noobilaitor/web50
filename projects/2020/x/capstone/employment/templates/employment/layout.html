@@ -13,8 +13,13 @@
     <div id="navbar">
         <h1 id="title"><a href="{% url "index" %}">Place Holder</a></h1>
         {% if user.employer %}
-        <h3 class="nav_items"><a href="{% url 'filter_CV' %}">Find employees</a></h3>
-        <h3 class="nav_items"><a href="{% url "create_job" %}">Create a Job</a></h3>
+            {% if user.has_job %}
+            <h3 class="nav_items"><a href="{% url 'filter_CV' %}">Find employees</a></h3>
+            <h3 class="nav_items"><a href="{% url "edit_job" %}">Edit your Job</a></h3>
+            {% else %}
+            <h3 class="nav_items"><a href="{% url 'filter_CV' %}">Find employees</a></h3>
+            <h3 class="nav_items"><a href="{% url "create_job" %}">Create a Job</a></h3>
+            {% endif %}
         {% else %}
         <h3 class="nav_items"><a href="{% url "alljobs" %}">Find a Job</a></h3>
             {% if user.has_CV %}
@@ -25,6 +30,19 @@
         {% endif %}
         <div id="log_in">
             {% if user.employer or user.employee %}
+            {% if user.employer %}
+                {% if user.job_requests.all %}
+                <h3 id="svg" class="nav-items"><a href="{% url "notification" %}"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M80-560q0-100 44.5-183.5T244-882l47 64q-60 44-95.5 111T160-560H80Zm720 0q0-80-35.5-147T669-818l47-64q75 55 119.5 138.5T880-560h-80ZM160-200v-80h80v-280q0-83 50-147.5T420-792v-28q0-25 17.5-42.5T480-880q25 0 42.5 17.5T540-820v28q80 20 130 84.5T720-560v280h80v80H160Zm320-300Zm0 420q-33 0-56.5-23.5T400-160h160q0 33-23.5 56.5T480-80ZM320-280h320v-280q0-66-47-113t-113-47q-66 0-113 47t-47 113v280Z"/></svg></a></h3>
+                {% else %}
+                <h3 class="nav_items"><a href="{% url "notification" %}"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M160-200v-80h80v-280q0-83 50-147.5T420-792v-28q0-25 17.5-42.5T480-880q25 0 42.5 17.5T540-820v28q80 20 130 84.5T720-560v280h80v80H160Zm320-300Zm0 420q-33 0-56.5-23.5T400-160h160q0 33-23.5 56.5T480-80ZM320-280h320v-280q0-66-47-113t-113-47q-66 0-113 47t-47 113v280Z"/></svg></a></h3>
+                {% endif %}
+            {% else %}
+                {% if user.CV_requests.all %}
+                <h3 id="svg" class="nav-items"><a href="{% url "notification" %}"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M80-560q0-100 44.5-183.5T244-882l47 64q-60 44-95.5 111T160-560H80Zm720 0q0-80-35.5-147T669-818l47-64q75 55 119.5 138.5T880-560h-80ZM160-200v-80h80v-280q0-83 50-147.5T420-792v-28q0-25 17.5-42.5T480-880q25 0 42.5 17.5T540-820v28q80 20 130 84.5T720-560v280h80v80H160Zm320-300Zm0 420q-33 0-56.5-23.5T400-160h160q0 33-23.5 56.5T480-80ZM320-280h320v-280q0-66-47-113t-113-47q-66 0-113 47t-47 113v280Z"/></svg></a></h3>
+                {% else %}
+                <h3 class="nav_items"><a href="{% url "notification" %}"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M160-200v-80h80v-280q0-83 50-147.5T420-792v-28q0-25 17.5-42.5T480-880q25 0 42.5 17.5T540-820v28q80 20 130 84.5T720-560v280h80v80H160Zm320-300Zm0 420q-33 0-56.5-23.5T400-160h160q0 33-23.5 56.5T480-80ZM320-280h320v-280q0-66-47-113t-113-47q-66 0-113 47t-47 113v280Z"/></svg></a></h3>
+                {% endif %}
+            {% endif %}
             <h3 class="nav_items"><a href="{% url "logout" %}">Log out</a></h3>
             <h3 class="nav_items"><img id="profile_pic" src="{{user.profile_pic.url}}" alt="profile picture"></h3>
             <h3 class="nav_items"><a href="{% url "profile" user.username %}">{{user.username}}</a></h3>

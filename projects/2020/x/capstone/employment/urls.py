@@ -19,8 +19,11 @@ urlpatterns = [
     path("edit/job", views.edit_job, name="edit_job"),
     path("filter/jobs", views.filter_job, name="filter_job"),
     path("filter/jobs/<str:type>", views.filter_jobb, name="filter_jobb"),
+    path("notification", views.notification, name="notification"),
     
     #API routes
     path("filter/search/<str:content>", views.search, name="filter_CV"),
-    path("filter/search_job/<str:content>", views.search_job, name="filter_job")
+    path("filter/search_job/<str:content>", views.search_job, name="filter_job"),
+    path("user/<str:user>/recruit", views.recruit, name="recruit"),
+    path("notification/<str:user>", views.accept, name="accept"),
 ]

@@ -31,6 +31,18 @@ document.addEventListener('DOMContentLoaded', function() {
             })
         }
     }catch{}
+    try{
+        recruit_btn = document.getElementById("recruit")
+        recruit_btn.addEventListener("click", function(){
+            recruit(recruit_btn.dataset.id, true)
+    })
+    }catch{}
+    try{
+        acc_btn = document.getElementById("accept")
+        acc_btn.addEventListener("click", function(){
+            work(acc_btn.dataset.id)
+    })
+    }catch{}
 })
 
 const engineer = ["---","chemical engineering", "computer engineering", "civil engineering", "mechanical engineering"]
@@ -163,4 +175,44 @@ function search(bool){
             }
         })
     }
+}
+
+function recruit(user, bool){
+    fetch(`${user}/recruit`)
+    .then(response =>response.json())
+    .then(result =>{
+        if (result.message === "success"){
+            recruit_btn = document.getElementById("recruit")
+            recruit_btn.textContent = `Already recruited ${user}`
+            console.log(result)
+        } else if( result.message === "fail"){
+            recruit_btn = document.getElementById("recruit")
+            recruit_btn.textContent = `Recruit ${user}`
+            console.log(result)
+        } else if( result.result === "success"){
+            recruit_btn = document.getElementById("recruit")
+            recruit_btn.textContent = `Already applied for ${user}'s job`
+            console.log(result)
+        } else if( result.result === "fail"){
+            recruit_btn = document.getElementById("recruit")
+            recruit_btn.textContent = `Apply for ${user}'s job`
+            console.log(result)
+        }
+    })
+}
+
+function work(user){
+    fetch(`notification/${user}`)
+    .then(response =>response.json())
+    .then(result =>{
+        if (result.message === "accepted"){
+            div = document.getElementById(user)
+            div.remove()
+            console.log(result)
+        } else if(result.message === "j_accepted"){
+            div = document.getElementById(user)
+            div.remove()
+            console.log(result)
+        }
+    })
 }

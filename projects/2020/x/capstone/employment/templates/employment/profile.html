@@ -25,4 +25,15 @@
     <h2 id="p_skill">Description: </h2>
     <h4 class="p_edu">{{cv.description}}</h4>
 </div>
+{% if cv.is_active %}
+    {% if user.employer %}
+        {% if cv.person in request.user.CV_requests.all %}
+        <button data-id="{{cv.person.username}}" id='recruit'>Already recruited {{cv.person.first_name}}</button>
+        {% else %}
+        <button data-id="{{cv.person.username}}" id='recruit'>Recruit {{cv.person.first_name}}</button>
+        {% endif %}
+    {% endif %}
+{% else %}
+<h2>An employee has already been found</h2>
+{% endif %}
 {% endblock body %}

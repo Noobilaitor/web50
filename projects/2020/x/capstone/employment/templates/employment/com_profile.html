@@ -2,7 +2,7 @@
 {% load extras %}
 {% block body %}
 
-<h1 class="home">{{job.person.username}}'s job</h1>
+<h1 class="home">{{job.person.username}}'s job application</h1>
 <div class="home"><h2 id="p_job">looking for {{job.job}}</h2>
 <h2>majored in {{job.major}}</h2></div>
 <div id="all_search">
@@ -21,4 +21,15 @@
     <h2 id="p_skill">Salary: </h2>
     <h4 id="sal" class="p_edu">{{job.salary}}$/month</h4>
 </div>
+{% if job.is_active %}
+    {% if user.employee %}
+        {% if job.person in request.user.job_requests.all %}
+        <button data-id="{{job.person.username}}" id='recruit'>Already applied for {{job.person.username}}'s job</button>
+        {% else %}
+        <button data-id="{{job.person.username}}" id='recruit'>Apply for {{job.person.username}}'s job</button>
+        {% endif %}
+    {% endif %}
+{% else %}
+<h2>An employer has already been found</h2>
+{% endif %}
 {% endblock body %}

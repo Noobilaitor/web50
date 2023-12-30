@@ -257,3 +257,27 @@ a{
 #sal{
     font-size: larger;
 }
+
+#svg{
+    margin: 0;
+    display: flex;
+    align-items: flex-end;
+    margin-bottom: 5px;
+}
+
+.noti{
+    display: flex;
+}
+
+#message{
+    margin: 0;
+    margin-right: 1rem;
+}
+
+#accept{
+    background-color: #10dd10;
+}
+
+#reject{
+    background-color: #ff3737;
+}

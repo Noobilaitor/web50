@@ -1,0 +1,21 @@
+{% extends "employment/layout.html" %}
+{% block body %}
+<h1>Notifications</h1>
+{% if user.employee %}
+    {% for request in user.CV_requests.all %}
+        <div id={{request.username}} class="noti">
+            <h3 id="message"><a href="{% url "profile" request.username %}">{{request.username}}</a> wants you to work for him</h3>
+            <button data-id={{request.username}} id="accept">Accept</button>
+            <button id="reject">Reject</button>
+        </div>
+    {% endfor %}
+{% elif user.employer %}
+    {% for request in user.job_requests.all %}
+        <div id={{request.username}} class="noti">
+            <h3 id="message"><a href="{% url "profile" request.username %}">{{request.username}}</a> wants you to work for you</h3>
+            <button data-id={{request.username}} id="accept">Accept</button>
+            <button id="reject">Reject</button>
+        </div>
+    {% endfor %}
+{% endif %}
+{% endblock body %}
