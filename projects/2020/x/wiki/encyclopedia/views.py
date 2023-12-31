@@ -57,10 +57,9 @@ def new_page(request):
 
 def savePage(request):
     if request.method == "POST":
-        title = request.POST["title"]
-        textContent = request.POST["textContent"]
+        title = request.POST["title"].strip()
+        textContent = request.POST["textContent"].strip()
         all_entries = util.list_entries()
-        print("1")
         if title == "" or textContent == "":
             return render(request, "encyclopedia/index.html")
         elif title in all_entries:
@@ -68,13 +67,11 @@ def savePage(request):
             "error": "This page already exists" 
             })
         else:
-            text_Content = markdown2.Markdown()
-            text_Content = text_Content.convert(textContent)
             util.save_entry(title,textContent)
             return render(request, "encyclopedia/entries.html", {
-            "title": title,
-            "content": text_Content
-            })
+                "title": title,
+                "content": textContent
+                })
 
 def edit(request):
     if request.method == "POST":
