@@ -3,16 +3,29 @@
 {% block body %}
 {% if not user.is_authenticated %}
 <div>
-    <h1 class="not_user">Find a job right now!</h1>
-    <div class="home"><h2 id="sea">Search between hundreds of jobs</h2>
-    <h2><a href="{% url "create_CV" %}">Create your own CV</a></h2></div>
-    <h3>Filter between jobs:</h3>
+    <h1 class="not_user">Welcome to </h1>
+    <div class="home"><a href="{% url "filter_job" %}"><h2 id="sea">Search between jobs</h2></a>
+    <h2><a href="{% url "filter_CV" %}">Search between CVs</a></h2></div>
+    <div class="home"><a href="{% url "create_job" %}"><h2 id="sea">Create a job</h2></a>
+    <h2><a href="{% url "create_CV" %}">Create a CV</a></h2></div>
+    <h2 class="filter">Filter between jobs:</h2>
+    <ul id="types">
+        {% for cat in cats %}
+        <a data-id="{{cat}}" id="cat_link" href="{% url "filter_jobb" cat %}"><li>{{cat}}</li></a>
+        {% endfor %}
+    </ul>
+    <h2 class="filter">Filter between CVs</h2>
+    <ul id="types">
+        {% for cat in cats %}
+        <a data-id="{{cat}}" id="cat_link" href="{% url "filter_CVV" cat %}"><li>{{cat}}</li></a>
+        {% endfor %}
+    </ul>
 </div>
 {% elif user.employer %}
 <div>
     <h1 class="not_user">Find any CV right now!</h1>
     <div class="home"><a href="{% url "filter_CV" %}"><h2 id="sea">Search between hundreds of CVs</h2></a>
-    <h2><a href="">Post your own job</a></h2></div>
+    <h2><a href="{% url "create_job" %}">Post your own job</a></h2></div>
     <h2 class="filter">Filter CVs by job:</h2>
     <ul id="types">
         {% for cat in cats %}
@@ -34,6 +47,35 @@
             </div>
         </div>
         <h4 id="desc">{{CV.description}}</h4>
+    </div>
+    {% endfor %}
+</div>
+{% elif user.employee %}
+<div>
+    <h1 class="not_user">Find any job right now!</h1>
+    <div class="home"><a href="{% url "filter_job" %}"><h2 id="sea">Search between hundreds of jobs</h2></a>
+    <h2><a href="{% url "create_CV" %}">Create your CV</a></h2></div>
+    <h2 class="filter">Filter jobs:</h2>
+    <ul id="types">
+        {% for cat in cats %}
+        <a data-id="{{cat}}" id="cat_link" href="{% url "filter_jobb" cat %}"><li>{{cat}}</li></a>
+        {% endfor %}
+    </ul>
+</div>
+<h1 id="all_CVs">All Jobs</h1>
+<div>
+    {% for job in jobs %}
+    <div id='singleCV'>
+        <div class="per_ski">
+            <a href="{% url "profile" job.person.username %}"><h1 id="person">{{job.person}}</h1></a>
+            <div id="skill">
+                <h3 class="skill">{{job.job}}</h3>
+                {% for skill in job.skills|skill %}
+                <h3 class="skill">{{skill}}</h3>
+                {% endfor %}
+            </div>
+        </div>
+        <h4 id="desc">{{job.description}}</h4>
     </div>
     {% endfor %}
 </div>

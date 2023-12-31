@@ -18,9 +18,11 @@ categories = ["engineer","medicine","business"]
 
 def index(request):
     CVs = CV.objects.filter(is_active=True).all()
+    jobs = Job.objects.filter(is_active=True).all()
     return render(request, "employment/index.html",{
         "cats": categories,
-        "CVs": CVs
+        "CVs": CVs,
+        "jobs": jobs,
     })
 
 def login_view(request):
@@ -129,35 +131,38 @@ def emp_register(request):
         return render(request, "employment/emp_register.html")
 
 def create_CV(request):
-    if request.method == "POST":
-        if request.user.employee:
-            if not request.user.has_CV:       
-                user = request.user
-                education = request.POST["education"]
-                career = request.POST["career"]
-                skills = request.POST["skills"]
-                about = request.POST["about"]
-                job = request.POST["cat"]
-                major = request.POST["s_cat"]
-                new_CV = CV.objects.create(job=job, major=major, person=user,education=education,career=career,skills=skills,description=about)
-                new_CV.save()
-                user.has_CV = True
-                user.save()
-                return HttpResponseRedirect(reverse("index"))
+    if request.user.is_authenticated:
+        if request.method == "POST":
+            if request.user.employee:
+                if not request.user.has_CV:       
+                    user = request.user
+                    education = request.POST["education"]
+                    career = request.POST["career"]
+                    skills = request.POST["skills"]
+                    about = request.POST["about"]
+                    job = request.POST["cat"]
+                    major = request.POST["s_cat"]
+                    new_CV = CV.objects.create(job=job, major=major, person=user,education=education,career=career,skills=skills,description=about)
+                    new_CV.save()
+                    user.has_CV = True
+                    user.save()
+                    return HttpResponseRedirect(reverse("index"))
+                else:
+                    return render(request, "employment/create_CV.html", {
+                    "message": "You already have a CV.",
+                    "cats": categories
+                })
             else:
                 return render(request, "employment/create_CV.html", {
-                "message": "You already have a CV.",
-                "cats": categories
-            })
+                    "message": "You are not an employee.",
+                    "cats": categories
+                })
         else:
-            return render(request, "employment/create_CV.html", {
-                "message": "You are not an employee.",
+            return render(request, "employment/create_CV.html",{
                 "cats": categories
             })
     else:
-        return render(request, "employment/create_CV.html",{
-            "cats": categories
-        })
+        return HttpResponseRedirect(reverse("register"))
 
 def allCVs(request):
     CVs = CV.objects.filter(is_active=True).all().order_by("-id")
@@ -253,28 +258,31 @@ def profile(request, user):
     })
 
 def create_job(request):
-    if request.method == "POST":
-        if request.user.employer:     
-            user = request.user
-            salary = request.POST["salary"]
-            skills = request.POST["skills"]
-            desc = request.POST["desc"]
-            job = request.POST["cat"]
-            major = request.POST["s_cat"]
-            new_job = Job.objects.create(job=job, major=major, person=user,skills=skills,description=desc, salary=salary)
-            new_job.save()
-            user.has_job = True
-            user.save()
-            return HttpResponseRedirect(reverse("index"))
+    if request.user.is_authenticated:
+        if request.method == "POST":
+            if request.user.employer:     
+                user = request.user
+                salary = request.POST["salary"]
+                skills = request.POST["skills"]
+                desc = request.POST["desc"]
+                job = request.POST["cat"]
+                major = request.POST["s_cat"]
+                new_job = Job.objects.create(job=job, major=major, person=user,skills=skills,description=desc, salary=salary)
+                new_job.save()
+                user.has_job = True
+                user.save()
+                return HttpResponseRedirect(reverse("index"))
+            else:
+                return render(request, "employment/create_job.html", {
+                    "message": "You are not an employer.",
+                    "cats": categories
+                })
         else:
-            return render(request, "employment/create_job.html", {
-                "message": "You are not an employer.",
+            return render(request, "employment/create_job.html",{
                 "cats": categories
             })
     else:
-        return render(request, "employment/create_job.html",{
-            "cats": categories
-        })
+        return HttpResponseRedirect(reverse("register"))
 
 def alljobs(request):
     jobs = Job.objects.filter(is_active=True).all().order_by("-id")

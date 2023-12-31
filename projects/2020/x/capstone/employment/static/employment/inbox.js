@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     const urls = ['http://127.0.0.1:8000/register/employer',
-     'http://127.0.0.1:8000/register', 'http://127.0.0.1:8000/login', 'http://127.0.0.1:8000/create',
+     'http://127.0.0.1:8000/register', 'http://127.0.0.1:8000/login', 'http://127.0.0.1:8000/create_CV',
      'http://127.0.0.1:8000/edit','http://127.0.0.1:8000/create_job']
     const search_urls = ['http://127.0.0.1:8000/filter/jobs', 'http://127.0.0.1:8000/filter/search_job']
     html = document.getElementById('html')
